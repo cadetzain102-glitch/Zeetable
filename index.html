@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChronoFlow Pro — Next-Gen Productivity</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #131b2e;
+            --accent-primary: #3b82f6;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --accent-glow: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(19, 27, 46, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --card-glow: rgba(59, 130, 246, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, .brand-logo {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Ambient Glow Background Blobs */
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(40px);
+            animation: pulseGlow 10s infinite alternate;
+        }
+        .blob-1 { top: -100px; right: -100px; }
+        .blob-2 { bottom: 20%; left: -200px; background: radial-gradient(circle, rgba(29, 78, 216, 0.15) 0%, rgba(0,0,0,0) 70%); }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.1) translate(30px, 50px); }
+        }
+
+        /* Header Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(11, 15, 25, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--accent-glow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            padding: 5px 0;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--text-main);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 100%;
+        }
+
+        /* Main Content App Tabs Container */
+        .tab-content {
+            display: none;
+            padding-top: 120px;
+            min-height: 100vh;
+            animation: fadeInPage 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Main View Wrapper */
+        .wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 5%;
+        }
+
+        /* ==================== HOME TAB ==================== */
+        .hero {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 100px;
+        }
+
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; text-align: center; }
+            .hero-badge { margin: 0 auto; }
+            .hero-actions { justify-content: center; }
+            .features-grid { grid-template-columns: 1fr !important; }
+            .about-container { grid-template-columns: 1fr !important; text-align: center; }
+            .contact-layout { grid-template-columns: 1fr !important; }
+        }
+
+        .hero-badge {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #60a5fa;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: 54px;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ffffff 30%, #a5f3fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 35px;
+            max-width: 540px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 25px var(--card-glow);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-main);
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Floating App Mockup Illusion */
+        .mockup-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-visual-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            padding: 25px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
+            animation: floatingCard 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatingCard {
+            0% { transform: translateY(0px) rotate(1deg); }
+            100% { transform: translateY(-15px) rotate(-1deg); }
+        }
+
+        .mock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .mock-dots { display: flex; gap: 6px; }
+        .mock-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+        .mock-dot.red { background: #ef4444; }
+
+        .mock-timer-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .mock-time { font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 700; color: #38bdf8; }
+
+        /* Features Section */
+        .section-title-area {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-title-area h2 { font-size: 36px; margin-bottom: 15px; }
+        .section-title-area p { color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .feature-premium-card {
+            background: linear-gradient(145deg, rgba(19, 27, 46, 0.4) 0%, rgba(11, 15, 25, 0.6) 100%);
+            border: 1px solid var(--glass-border);
+            padding: 35px 30px;
+            border-radius: 16px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-premium-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 30px var(--card-glow);
+        }
+
+        .card-icon-wrapper {
+            width: 55px;
+            height: 55px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #38bdf8;
+            margin-bottom: 25px;
+            transition: 0.3s;
+        }
+        .feature-premium-card:hover .card-icon-wrapper {
+            background: var(--accent-gradient);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .feature-premium-card h3 { font-size: 20px; margin-bottom: 12px; font-weight: 600; }
+        .feature-premium-card p { color: var(--text-muted); font-size: 14px; }
+
+
+        /* ==================== ABOUT TAB ==================== */
+        .about-container {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-avatar-zone {
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .avatar-glow-ring {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: padding-box linear-gradient(var(--bg-secondary), var(--bg-secondary)), 
+                        border-box var(--accent-glow);
+            border: 4px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 50px rgba(59, 130, 246, 0.25);
+            animation: pulseRing 4s infinite alternate;
+        }
+
+        @keyframes pulseRing {
+            0% { box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2); }
+            100% { box-shadow: 0 20px 60px rgba(59, 130, 246, 0.4); transform: scale(1.02); }
+        }
+
+        .about-details h2 { font-size: 40px; margin-bottom: 10px; }
+        .about-subtitle { color: #38bdf8; font-weight: 600; font-size: 16px; margin-bottom: 25px; letter-spacing: 1px; text-transform: uppercase;}
+        .about-details p { color: var(--text-muted); margin-bottom: 20px; font-size: 16px; }
+
+        .profile-badges {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+            margin-bottom: 35px;
+        }
+        .p-badge {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+
+        /* ==================== DOWNLOAD TAB ==================== */
+        .download-box {
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, rgba(11, 15, 25, 0.9) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 60px 40px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--accent-gradient);
+        }
+
+        .dl-icon { font-size: 70px; color: #38bdf8; margin-bottom: 25px; animation: bounceDl 2s infinite; }
+        @keyframes bounceDl {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .download-box h2 { font-size: 38px; margin-bottom: 15px; }
+        .download-box p { color: var(--text-muted); max-width: 550px; margin: 0 auto 40px auto; font-size: 16px; }
+
+        .release-specs {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 30px;
+        }
+        .spec-item div:first-child { color: var(--text-muted); font-size: 13px; margin-bottom: 4px; }
+        .spec-item div:last-child { font-weight: 600; font-size: 15px; color: var(--text-main); }
+
+
+        /* ==================== CONTACT TAB ==================== */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr;
+            gap: 50px;
+        }
+
+        .contact-info-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .info-row { display: flex; align-items: center; gap: 20px; }
+        .info-icon {
+            width: 48px; height: 48px; background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            color: #38bdf8; font-size: 18px;
+        }
+        .info-text div:first-child { font-size: 13px; color: var(--text-muted); }
+        .info-text div:last-child { font-weight: 600; font-size: 15px; }
+
+        .contact-form {
+            background: rgba(19, 27, 46, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: var(--text-muted); }
+        .form-control {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 14px;
+            color: white;
+            font-family: inherit;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 30px 5%;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 80px;
+            background: #090d16;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <header>
+        <a class="brand-logo" onclick="switchTab('home')">
+            <i class="fa-solid fa-bolt-lightning"></i> Zeetable
+        </a>
+        <nav>
+            <a id="nav-home" class="active" onclick="switchTab('home')">Home</a>
+            <a id="nav-about" onclick="switchTab('about')">About Me</a>
+            <a id="nav-download" onclick="switchTab('download')">Download</a>
+            <a id="nav-contact" onclick="switchTab('contact')">Contact</a>
+        </nav>
+    </header>
+
+    <section id="tab-home" class="tab-content active">
+        <div class="wrapper">
+            <div class="hero">
+                <div>
+                    <div class="hero-badge"><i class="fa-solid fa-sparkles"></i> High-Performance Desktop App Engine</div>
+                    <h1><span class="gradient-text">Master Your Time Vector With</span> <span style="color:#38bdf8;">Zeetable</span></h1>
+                    <p>Ek advanced scheduling aura multi-layer task tracking system jo aapki productivity ko streamline karta hai. Secure native storage aur automatic hardware shutdown architecture ke sath built completely optimized.</p>
+                    <div class="hero-actions">
+                        <button class="btn-primary" onclick="switchTab('download')"><i class="fa-solid fa-download"></i> Get Free Installer</button>
+                        <button class="btn-secondary" onclick="switchTab('about')">Explore Creator Profile</button>
+                    </div>
+                </div>
+                <div class="mockup-container">
+                    <div class="app-visual-card">
+                        <div class="mock-header">
+                            <div class="mock-dots"><div class="mock-dot red"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+                            <span style="font-size:12px; opacity:0.6;"><i class="fa-solid fa-shield-halved"></i> Zeetable DevMode</span>
+                        </div>
+                        <div style="font-weight:700; font-size:15px; margin-bottom:5px;">Core Active Session</div>
+                        <div style="font-size:13px; color:#94a3b8;"><i class="fa-regular fa-calendar"></i> Monday Routine Matrix</div>
+                        <div class="mock-timer-box">
+                            <div style="font-size:11px; text-transform:uppercase; color:#94a3b8; letter-spacing:1px;">Focus Countdown</div>
+                            <div class="mock-time">29:45</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title-area">
+                <h2>App Core Architectures</h2>
+                <p>Zeetable high-performance solutions provide total authority over system memory execution parameters and daily tasks routine optimization.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-premium-card">
+                    <div class="card-icon-wrapper"><i class="fa-solid fa-hard-drive"></i></div>
+                    <h3>Native Storage Control</h3>
+                    <p>Aapka saara data cloud controllers ke bajaye direct hard drive par safely load aur save hota hai bypass karke web constraints ko.</p>
+                </div>
+                <div class="feature-premium-card">
+                    <div class="card-icon-wrapper"><i class="fa-solid fa-power-off"></i></div>
+                    <h3>Autonomous Shutdown</h3>
+                    <p>Smart shutdown module integration jo timers complete hote hi direct computer ko safely power down system hardware signal bhej deta hai.</p>
+                </div>
+                <div class="feature-premium-card">
+                    <div class="card-icon-wrapper"><i class="fa-solid fa-gauge-high"></i></div>
+                    <h3>Optimized UI Matrix</h3>
+                    <p>Fluid transitions, live system clock counters, Pomodoro engine mode aur custom timeline configuration setups complete control ke liye.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tab-about" class="tab-content">
+        <div class="wrapper">
+            <div class="about-container">
+                <div class="about-avatar-zone">
+                    <div class="avatar-glow-ring" style="overflow: hidden; padding: 0 !important; display: flex !important; align-items: center !important; justify-content: center !important;">
+                        <img src="zain.png" alt="Zainuddin" style="width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; border-radius: 50%;">
+                    </div>
+                </div>
+                <div class="about-details">
+                    <h2>Zainuddin</h2>
+                    <div class="about-subtitle">Lead Systems & Application Developer</div>
+                    <p>Hello! Main ek software developer hoon jo complex tracking environments aur elegant desktop automation solutions build karne me specialize karta hoon. Zeetable ko makkhan ki tarah optimize aur seamlessly engineering karne ke piche mera vision kaam kar raha hai.</p>
+                    <p>Main modern design methodologies aur hardware backend mechanics ko mix karke premium interfaces design karta hoon jo immediate response aur real value drop karein.</p>
+                    
+                    <div class="profile-badges">
+                        <div class="p-badge"><i class="fa-brands fa-rust" style="color:#f97316;"></i> Tauri & Rust</div>
+                        <div class="p-badge"><i class="fa-brands fa-js" style="color:#eab308;"></i> JavaScript Pro</div>
+                        <div class="p-badge"><i class="fa-solid fa-cubes"></i> UI/UX System</div>
+                    </div>
+
+                    <a href="https://zainuddin7.github.io/-portfolio/" target="_blank" class="btn-secondary">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Visit My Full Portfolio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tab-download" class="tab-content">
+        <div class="wrapper">
+            <div class="download-box">
+                <div class="dl-icon"><i class="fa-solid fa-circle-down"></i></div>
+                <h2>Download Zeetable</h2>
+                <p>Apna full production desktop installer pack download kijiye aur real-time native speed execution access kijiye setup file run karke.</p>
+                
+                <a href="src-tauri/target/release/bundle/msi/" id="download-trigger-btn" download class="btn-primary" style="font-size:18px; padding:16px 45px;">
+                    <i class="fa-brands fa-windows"></i> Download Installer (.msi / .exe)
+                </a>
+
+                <div class="release-specs">
+                    <div class="spec-item">
+                        <div>Latest Version</div>
+                        <div>v1.0.0 Production</div>
+                    </div>
+                    <div class="spec-item">
+                        <div>Architecture</div>
+                        <div>Windows x64 Build</div>
+                    </div>
+                    <div class="spec-item">
+                        <div>License</div>
+                        <div>Open-Source / Free</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tab-contact" class="tab-content">
+        <div class="wrapper">
+            <div class="section-title-area">
+                <h2>Get In Touch</h2>
+                <p>Koi recommendation, feature requirement, ya system integration issue hai? Feel free to reach out directly to the desk loop.</p>
+            </div>
+
+            <div class="contact-layout">
+                <div class="contact-info-card">
+                    <div class="info-row">
+                        <div class="info-icon"><i class="fa-regular fa-envelope"></i></div>
+                        <div class="info-text">
+                            <div>Email Endpoint</div>
+                            <div>cadetzain102@gmail.com</div>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-icon"><i class="fa-solid fa-link"></i></div>
+                        <div class="info-text">
+                            <div>Portfolio Hub</div>
+                            <div>zainuddin7.github.io</div>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <div class="info-text">
+                            <div>Location Target</div>
+                            <div>Pakistan Workspace Matrix</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <form action="https://formspree.io/f/mojzwwae" method="POST">
+                        <div class="form-group">
+                            <label>Your Identity / Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="Enter name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" name="email" class="form-control" placeholder="name@domain.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Communication Message</label>
+                            <textarea name="message" class="form-control" rows="5" placeholder="Type structural details..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">
+                            <i class="fa-solid fa-paper-plane"></i> Send Secure Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Zeetable Studio. All Rights Reserved. Mastered elegantly by Zainuddin.</p>
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab components 
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Remove active tags from nav links
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            // Show targets
+            document.getElementById('tab-' + tabId).classList.add('active');
+            document.getElementById('nav-' + tabId).classList.add('active');
+
+            // Scroll to window top gracefully
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
