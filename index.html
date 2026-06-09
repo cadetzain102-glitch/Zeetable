@@ -88,6 +88,7 @@
             align-items: center;
             gap: 10px;
             text-decoration: none;
+            cursor: pointer;
         }
 
         nav {
@@ -349,7 +350,6 @@
         .feature-premium-card h3 { font-size: 20px; margin-bottom: 12px; font-weight: 600; }
         .feature-premium-card p { color: var(--text-muted); font-size: 14px; }
 
-
         /* ==================== ABOUT TAB ==================== */
         .about-container {
             display: grid;
@@ -405,7 +405,6 @@
             gap: 8px;
         }
 
-
         /* ==================== DOWNLOAD TAB ==================== */
         .download-box {
             background: linear-gradient(180deg, var(--bg-secondary) 0%, rgba(11, 15, 25, 0.9) 100%);
@@ -446,7 +445,6 @@
         }
         .spec-item div:first-child { color: var(--text-muted); font-size: 13px; margin-bottom: 4px; }
         .spec-item div:last-child { font-weight: 600; font-size: 15px; color: var(--text-main); }
-
 
         /* ==================== CONTACT TAB ==================== */
         .contact-layout {
@@ -618,8 +616,8 @@
                 <p>Apna full production desktop installer pack download kijiye aur real-time native speed execution access kijiye setup file run karke.</p>
                 
                 <a href="https://github.com/cadetzain102-glitch/Zeetable/releases/download/v1.0.0/chronoflow-desktop_0.1.0_x64_en-US.msi" target="_blank" rel="noopener noreferrer" download class="btn-primary" style="font-size:18px; padding:16px 45px;">
-    <i class="fa-brands fa-windows"></i> Download Installer (.msi / .exe)
-</a>
+                    <i class="fa-brands fa-windows"></i> Download Installer (.msi / .exe)
+                </a>
 
                 <div class="release-specs">
                     <div class="spec-item">
@@ -700,17 +698,25 @@
 
     <script>
         function switchTab(tabId) {
-            // Hide all tab components 
+            // Check if elements exist before changing classes to avoid runtime errors
+            const targetTab = document.getElementById('tab-' + tabId);
+            const targetNav = document.getElementById('nav-' + tabId);
+            
+            if (!targetTab) return; // Guard clause
+
+            // Hide all tab components safely
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => content.classList.remove('active'));
 
-            // Remove active tags from nav links
+            // Remove active tags from nav links safely
             const navLinks = document.querySelectorAll('nav a');
             navLinks.forEach(link => link.classList.remove('active'));
 
             // Show targets
-            document.getElementById('tab-' + tabId).classList.add('active');
-            document.getElementById('nav-' + tabId).classList.add('active');
+            targetTab.classList.add('active');
+            if (targetNav) {
+                targetNav.classList.add('active');
+            }
 
             // Scroll to window top gracefully
             window.scrollTo({ top: 0, behavior: 'smooth' });
